@@ -34,13 +34,18 @@ export const getWeatherIcon = condition => {
 	}
 }
 
-export const saveUser = (user) => {
-	const savedUsers = JSON.parse(localStorage.getItem('savedUsers')) || []
-	localStorage.setItem('savedUsers', JSON.stringify([...savedUsers, user]))
+export const saveUser = user => {
+	if (typeof window !== 'undefined') {
+		const savedUsers = JSON.parse(localStorage.getItem('savedUsers') || '[]')
+		const updatedUsers = [...savedUsers, user]
+		localStorage.setItem('savedUsers', JSON.stringify(updatedUsers))
+	}
 }
 
-export const removeUser = (email) => {
-	const savedUsers = JSON.parse(localStorage.getItem('savedUsers')) || []
-	const updatedUsers = savedUsers.filter(user => user.email !== email)
-	localStorage.setItem('savedUsers', JSON.stringify(updatedUsers))
+export const removeUser = email => {
+	if (typeof window !== 'undefined') {
+		const savedUsers = JSON.parse(localStorage.getItem('savedUsers') || '[]')
+		const updatedUsers = savedUsers.filter(user => user.email !== email)
+		localStorage.setItem('savedUsers', JSON.stringify(updatedUsers))
+	}
 }

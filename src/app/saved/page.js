@@ -16,8 +16,10 @@ const SavedUsersPage = () => {
 	const [showMap, setShowMap] = useState(false)
 
 	useEffect(() => {
-		const users = JSON.parse(localStorage.getItem('savedUsers')) || []
-		setSavedUsers(users)
+		if (typeof window !== 'undefined') {
+			const users = JSON.parse(localStorage.getItem('savedUsers') || '[]')
+			setSavedUsers(users)
+		}
 	}, [])
 
 	const handleWeatherClick = async user => {
