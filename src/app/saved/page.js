@@ -1,29 +1,24 @@
 'use client'
 
-import MapModal from '@/components/MapModal.js'
-import { removeUser, saveUser } from '@/utils/functions.js'
-import Link from 'next/link.js'
+import MapModal from '@/components/MapModal'
+import UserCard from '@/components/UserCard'
+import WeatherModal from '@/components/WeatherModal'
+import { fetchWeather } from '@/utils/api'
+import { removeUser, saveUser } from '@/utils/functions'
+import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import LoadMoreButton from '../components/LoadMoreButton.js'
-import UserCard from '../components/UserCard.js'
-import WeatherModal from '../components/WeatherModal.js'
-import { fetchUsers, fetchWeather } from '../utils/api'
 
-const Home = () => {
-	const [users, setUsers] = useState([])
-	const [weather, setWeather] = useState({})
+const SavedUsersPage = () => {
+	const [savedUsers, setSavedUsers] = useState([])
 	const [selectedUser, setSelectedUser] = useState(null)
+	const [weather, setWeather] = useState({})
 	const [showModal, setShowModal] = useState(false)
 	const [showMap, setShowMap] = useState(false)
 
 	useEffect(() => {
-		fetchUsers().then(data => setUsers(data))
+		const users = JSON.parse(localStorage.getItem('savedUsers')) || []
+		setSavedUsers(users)
 	}, [])
-
-	const handleLoadMore = async () => {
-		const newUsers = await fetchUsers()
-		setUsers(prevUsers => [...prevUsers, ...newUsers])
-	}
 
 	const handleWeatherClick = async user => {
 		setSelectedUser(user)
@@ -42,15 +37,14 @@ const Home = () => {
 
 	return (
 		<div className='container mx-auto p-4'>
-			<h1 className='text-2xl font-bold mb-4'>Users List</h1>
-			<Link href='/saved'>
-				<button className='bg-gray-500 text-white px-4 py-2 mb-4 mr-4'>
-					View Saved Users
+			<h1 className='text-2xl font-bold mb-4'>Saved Users</h1>
+			<Link href='/'>
+				<button className='bg-gray-500 text-white px-4 py-2 mb-4'>
+					Go back
 				</button>
 			</Link>
-			<LoadMoreButton onClick={handleLoadMore} />
 			<div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
-				{users.map((user, index) => (
+				{savedUsers.map((user, index) => (
 					<UserCard
 						key={index}
 						user={user}
@@ -76,4 +70,4 @@ const Home = () => {
 	)
 }
 
-export default Home
+export default SavedUsersPage
